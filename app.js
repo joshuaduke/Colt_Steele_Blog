@@ -76,8 +76,16 @@ app.get("/blogs/:id", (req, res)=>{
 
 //EDIT ROUTE
 app.get("/blogs/:id/edit", (req, res)=>{
-  res.render("edit");
+  Blog.findById(req.params.id, (err, foundBlog)=>{
+    if(err){
+      res.redirect("/blogs")
+    } else {
+      res.render("edit", {blog : foundBlog})
+    }
+  })
 })
+
+//UPDATE ROUTE
 
 app.listen(3000, process.env.PORT, ()=>{
   console.log("This server has begun...")
