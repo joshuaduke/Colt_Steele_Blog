@@ -4,7 +4,9 @@ let mongoose = require('mongoose');
 let app =  express();
 
 // App config
-mongoose.connect("mongodb://localhost/REST");
+// mongoose.connect("mongodb://localhost/REST", { useUnifiedTopology: true  });
+mongoose.connect("mongodb://localhost/REST" ,{ useNewUrlParser: true });
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
@@ -28,6 +30,7 @@ let Blog = mongoose.model("Blog", blogSchema);
 
 // Rest Routes
 
+//INDEX ROUTE
 app.get("/", (req, res)=>{
   res.redirect("/blogs");
 })
@@ -59,6 +62,22 @@ app.post("/blogs", (req, res)=>{
     }
   });
 });
+
+//SHOW ROUTE
+app.get("/blogs/:id", (req, res)=>{
+  Blog.findById(req.params.id, (err, foundBlog)=>{
+    if(err){
+      res.redirect("/blog");
+    } else {
+      res.render("show", {blog : foundBlog})
+    }
+  });
+});
+
+//EDIT ROUTE
+app.get("/blogs/:id/edit", (req, res)=>{
+  res.render("edit");
+})
 
 app.listen(3000, process.env.PORT, ()=>{
   console.log("This server has begun...")
