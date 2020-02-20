@@ -1,6 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
+let methodOverride = require('method-override');
 let app =  express();
 
 // App config
@@ -10,6 +11,7 @@ mongoose.connect("mongodb://localhost/REST" ,{ useNewUrlParser: true });
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method")); //look for _method take whatever its equal to and treat that request as a put or delete request
 
 /* Mongoose model config 
   Title
@@ -86,6 +88,16 @@ app.get("/blogs/:id/edit", (req, res)=>{
 })
 
 //UPDATE ROUTE
+app.put("/blogs/:id", (req, res)=>{
+  // Blog.findByIdAndUpdate(id, newDate, callback)
+  Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog)=>{
+    if(err){
+      res.redirect("/blogs");
+    } else {
+      res.redirect("/blogs/" + req.params.id);
+    }
+  });
+});
 
 app.listen(3000, process.env.PORT, ()=>{
   console.log("This server has begun...")
