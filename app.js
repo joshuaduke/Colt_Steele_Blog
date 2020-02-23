@@ -54,7 +54,7 @@ app.get("/blogs/new", (req, res)=>{
 
 //CREATE ROUTE
 app.post("/blogs", (req, res)=>{
-  //create blod
+  //create blog
   Blog.create(req.body.blog, (err, newBlog)=>{
     if(err){
       res.render("new");
@@ -96,6 +96,19 @@ app.put("/blogs/:id", (req, res)=>{
     } else {
       res.redirect("/blogs/" + req.params.id);
     }
+  });
+});
+
+//DELETE ROUTE
+app.delete("/blogs/:id", (req,res)=>{
+  //destroy blog 
+  Blog.findByIdAndRemove(req.params.id, (err)=>{
+    if(err){
+      console.log("destroy err")
+      res.redirect("/blogs");
+    }
+    //redirect somewhere
+    res.redirect("/blogs");
   });
 });
 
