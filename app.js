@@ -1,6 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
+let expressSanitizer = require("express-sanitizer");
 let methodOverride = require('method-override');
 let app =  express();
 
@@ -11,6 +12,7 @@ mongoose.connect("mongodb://localhost/REST" ,{ useNewUrlParser: true });
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(expressSanitizer());
 app.use(methodOverride("_method")); //look for _method take whatever its equal to and treat that request as a put or delete request
 
 /* Mongoose model config 
